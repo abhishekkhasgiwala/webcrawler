@@ -24,7 +24,7 @@ public class WebCrawlerApplication implements CommandLineRunner {
 	@Override
 	public void run(String[] args) {
 		try {
-			this.webcrawler.display();
+			this.webcrawler.execute();
 		} catch (IOException e) {
 			logger.error(e.getMessage());
 		}

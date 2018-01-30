@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class WebCrawlerConfig {
 
-	@Value("${webcrawler.doamin}")
+	@Value("${webcrawler.domain}")
 	private String domain;
 	@Value("${webcrawler.sitedepth}")
 	private String sitedepth;

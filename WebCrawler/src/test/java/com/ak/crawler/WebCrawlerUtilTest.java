@@ -5,8 +5,6 @@ import static org.junit.Assert.fail;
 
 import org.junit.Test;
 
-import com.ak.crawler.WebCrawlerUtil;
-
 public class WebCrawlerUtilTest {
 
 	// @Test
@@ -21,15 +19,19 @@ public class WebCrawlerUtilTest {
 
 	@Test
 	public void testIsExternalLinksSuccess() {
-		String url = "www.facebook.com";
-		boolean flag = WebCrawlerUtil.isExternalLinks(url);
+		String url = "www.google.com";
+		WebCrawlerConfig config = new WebCrawlerConfig();
+		config.setIgnorexternalsites("google,facebook,linkedin,twitter");
+		boolean flag = WebCrawlerUtil.isExternalLinks(url, config.getIgnorexternalsites());
 		assertEquals(flag, true);
 	}
 
 	@Test
 	public void testIsExternalLinksFailure() {
-		String url = "www.wipro.com";
-		boolean flag = WebCrawlerUtil.isExternalLinks(url);
+		String url = "www.wipro1.com";
+		WebCrawlerConfig config = new WebCrawlerConfig();
+		config.setIgnorexternalsites("google,facebook,linkedin,twitter");
+		boolean flag = WebCrawlerUtil.isExternalLinks(url, config.getIgnorexternalsites());
 		assertEquals(flag, false);
 	}
 }

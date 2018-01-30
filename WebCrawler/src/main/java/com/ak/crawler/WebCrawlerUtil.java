@@ -53,9 +53,8 @@ public class WebCrawlerUtil {
 	 * google,facebook,linkedin,twitter, if it is then it will return true else
 	 * false.
 	 */
-	public static boolean isExternalLinks(String url) {
-		String blacklistConfig = "google,linkedin,facebook,twitter";
-		String blacklist[] = blacklistConfig.split(",");
+	public static boolean isExternalLinks(String url, String ignoreSites) {
+		String blacklist[] = ignoreSites.split(",");
 		boolean flag = false;
 		for (int i = 0; i < blacklist.length; i++) {
 			if (url.contains(blacklist[i])) {

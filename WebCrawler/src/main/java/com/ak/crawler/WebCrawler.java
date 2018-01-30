@@ -21,18 +21,17 @@ import com.fasterxml.jackson.databind.ObjectWriter;
 public class WebCrawler {
 	private static final Logger logger = LoggerFactory.getLogger(WebCrawler.class);
 	private static HashSet<String> links = new HashSet<String>();
-	private static int MAX_DEPTH = 5;
 
 	@Autowired
 	private WebCrawlerConfig config;
 
-	public void display() throws IOException {
+	public void execute() throws IOException {
 		logger.debug("Application Started");
 		// do validation of url
 		SiteMap sitemap = new SiteMap();
 		int depth = 1;
 
-		Urls url = getMoreLinks("http://localhost:8080", depth, new Urls());
+		Urls url = getMoreLinks(config.getDomain(), depth, new Urls());
 		sitemap.setSitemap(url);
 		logger.debug("****** Links " + links.size());
 		display(links);
@@ -44,9 +43,8 @@ public class WebCrawler {
 
 	}
 
-	private static Urls getMoreLinks(String url, int depth, Urls urls) {
-
-		if ((!links.contains(url) && (depth < MAX_DEPTH))) {
+	public Urls getMoreLinks(String url, int depth, Urls urls) {
+		if ((!links.contains(url) && (depth < Integer.parseInt(config.getSitedepth())))) {
 			links.add(url);
 			Document doc = WebCrawlerUtil.getDocument(url);
 			if (doc != null) {
@@ -56,16 +54,13 @@ public class WebCrawler {
 
 				for (Element img : imgs) {
 					urls.getImage().add(img.attr("abs:src"));
-					// siteMap.setSitemap(urls);
 					links.add(img.attr("abs:src"));
 				}
-
 				for (Element href : hrefs) {
-					if (WebCrawlerUtil.isExternalLinks(href.absUrl("href"))) {
+					if (WebCrawlerUtil.isExternalLinks(href.absUrl("href"), config.getIgnorexternalsites())) {
 						continue;
 					} else {
 						urls.getLoc().add(href.absUrl("href"));
-						// siteMap.setSitemap(urls);
 						getMoreLinks(href.absUrl("href"), depth, urls);
 					}
 				}
