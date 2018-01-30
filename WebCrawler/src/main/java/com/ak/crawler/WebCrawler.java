@@ -1,6 +1,5 @@
 package com.ak.crawler;
 
-import java.io.IOException;
 import java.util.HashSet;
 import java.util.Iterator;
 
@@ -14,8 +13,6 @@ import org.springframework.stereotype.Component;
 
 import com.ak.crawler.bo.SiteMap;
 import com.ak.crawler.bo.Urls;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectWriter;
 
 @Component
 public class WebCrawler {
@@ -25,24 +22,28 @@ public class WebCrawler {
 	@Autowired
 	private WebCrawlerConfig config;
 
-	public void execute() throws IOException {
-		logger.debug("Application Started");
-		// do validation of url
+	/*
+	 * Crawler execute method to create sitemap
+	 */
+	public void execute() {
+		logger.info("--Start--");
+
 		SiteMap sitemap = new SiteMap();
 		int depth = 1;
 
 		Urls url = getMoreLinks(config.getDomain(), depth, new Urls());
 		sitemap.setSitemap(url);
-		logger.debug("****** Links " + links.size());
-		display(links);
-		logger.debug("**" + sitemap.getSitemap().getLoc().size() + " " + sitemap.getSitemap().getImage().size());
 
-		ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
-		String json = ow.writeValueAsString(sitemap);
-		logger.info(json);
+		// this will write the sitemap to given path
+		WebCrawlerUtil.writeOutput(sitemap, config.getOutputFilePath());
+		logger.info("--End--");
 
 	}
 
+	/*
+	 * This method will recursive get the links and img loc from webPage
+	 * A->B->C->D->E with configurable depth
+	 */
 	public Urls getMoreLinks(String url, int depth, Urls urls) {
 		if ((!links.contains(url) && (depth < Integer.parseInt(config.getSitedepth())))) {
 			links.add(url);

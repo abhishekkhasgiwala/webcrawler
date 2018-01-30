@@ -14,7 +14,14 @@ public class WebCrawlerUtilTest {
 
 	// @Test
 	public void testValidateUrl() {
-		fail("Not yet implemented");
+		String url = "http://localhost:8080";
+		boolean out = WebCrawlerUtil.validateUrl(url);
+		assertEquals(true, out);
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void throwsOnMalformedUrl() {
+		WebCrawlerUtil.validateUrl("adsfad");
 	}
 
 	@Test
@@ -23,7 +30,7 @@ public class WebCrawlerUtilTest {
 		WebCrawlerConfig config = new WebCrawlerConfig();
 		config.setIgnorexternalsites("google,facebook,linkedin,twitter");
 		boolean flag = WebCrawlerUtil.isExternalLinks(url, config.getIgnorexternalsites());
-		assertEquals(flag, true);
+		assertEquals(true, flag);
 	}
 
 	@Test
@@ -32,6 +39,6 @@ public class WebCrawlerUtilTest {
 		WebCrawlerConfig config = new WebCrawlerConfig();
 		config.setIgnorexternalsites("google,facebook,linkedin,twitter");
 		boolean flag = WebCrawlerUtil.isExternalLinks(url, config.getIgnorexternalsites());
-		assertEquals(flag, false);
+		assertEquals(false, flag);
 	}
 }

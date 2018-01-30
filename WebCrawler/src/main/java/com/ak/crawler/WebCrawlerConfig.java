@@ -4,14 +4,19 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @Component
+
 public class WebCrawlerConfig {
 
 	@Value("${webcrawler.domain}")
+	// @NotNull(message = "Domain name is mandatory")
+	// @Pattern()
 	private String domain;
 	@Value("${webcrawler.sitedepth}")
 	private String sitedepth;
 	@Value("${webcrawler.ignorexternalsites}")
 	private String ignorexternalsites;
+	@Value("${webcrawler.output.filepath}")
+	private String outputFilePath;
 
 	public String getDomain() {
 		return domain;
@@ -37,4 +42,11 @@ public class WebCrawlerConfig {
 		this.ignorexternalsites = ignorexternalsites;
 	}
 
+	public String getOutputFilePath() {
+		return outputFilePath;
+	}
+
+	public void setOutputFilePath(String outputFilePath) {
+		this.outputFilePath = outputFilePath;
+	}
 }

@@ -1,12 +1,21 @@
 package com.ak.crawler;
 
+import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
 
 import org.jsoup.Connection;
+import org.jsoup.Connection.Response;
+import org.jsoup.HttpStatusException;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.ak.crawler.bo.SiteMap;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
 
 /*
  * WebCrawler Util class
@@ -22,8 +31,12 @@ public class WebCrawlerUtil {
 		Document doc = null;
 		try {
 			doc = Jsoup.connect(url).get();
+		} catch (HttpStatusException e) {
+			logger.error(e.getMessage());
+		} catch (MalformedURLException e) {
+			logger.error(e.getMessage());
 		} catch (IOException e) {
-			logger.error("Url " + url + " " + e.getMessage(), e.getCause());
+			logger.error(e.getMessage());
 		}
 		return doc;
 	}
@@ -34,15 +47,19 @@ public class WebCrawlerUtil {
 	 * it will return false
 	 */
 	public static boolean validateUrl(String url) {
-		Connection.Response response = null;
 		boolean flag = false;
 		try {
-			response = Jsoup.connect(url).execute();
+			Connection con = Jsoup.connect(url);
+			Response response = con.execute();
 			if (response.statusCode() == 200) {
 				flag = true;
 			}
+		} catch (HttpStatusException e) {
+			logger.error(e.getMessage());
+		} catch (MalformedURLException e) {
+			logger.error(e.getMessage());
 		} catch (IOException e) {
-			logger.error("Url " + url + " " + response.statusCode() + " " + response.statusMessage());
+			logger.error(e.getMessage());
 		}
 		return flag;
 
@@ -64,5 +81,20 @@ public class WebCrawlerUtil {
 			}
 		}
 		return flag;
+	}
+
+	public static void writeOutput(SiteMap sitemap, String path) {
+		ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
+		String json;
+		try {
+			json = ow.writeValueAsString(sitemap);
+			ow.writeValue(new File(path), sitemap);
+			logger.info(json);
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
 	}
 }
