@@ -34,12 +34,15 @@ public class WebCrawler {
 
 		SiteMap sitemap = new SiteMap();
 		int depth = 1;
+		if (WebCrawlerUtil.validateUrl(config.getDomain())) {
+			Urls url = getMoreLinks(config.getDomain(), depth, new Urls());
+			sitemap.setSitemap(url);
 
-		Urls url = getMoreLinks(config.getDomain(), depth, new Urls());
-		sitemap.setSitemap(url);
-
-		// this will write the sitemap to given path
-		WebCrawlerUtil.writeOutput(sitemap, config.getOutputFilePath());
+			// this will write the sitemap to given path
+			WebCrawlerUtil.writeOutput(sitemap, config.getOutputFilePath());
+		} else {
+			logger.info("Abort as given domain is not valid");
+		}
 		logger.info("--End--");
 
 	}
