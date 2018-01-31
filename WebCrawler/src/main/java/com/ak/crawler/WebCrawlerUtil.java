@@ -32,11 +32,11 @@ public class WebCrawlerUtil {
 		try {
 			doc = Jsoup.connect(url).get();
 		} catch (HttpStatusException e) {
-			logger.error(e.getMessage());
+			logger.error(e.getMessage() + " " + url);
 		} catch (MalformedURLException e) {
-			logger.error(e.getMessage());
+			logger.error(e.getMessage() + " " + url);
 		} catch (IOException e) {
-			logger.error(e.getMessage());
+			logger.error(e.getMessage() + " " + url);
 		}
 		return doc;
 	}
