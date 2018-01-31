@@ -36,6 +36,7 @@ Example Output file sitemap.json
     "image" : [ "http://localhost:8080/about/Logo.png" ]
   }
 }
+```
 
 # TestSite
 TestSite is demo website which contains static webpages, build using spring boot
@@ -50,6 +51,7 @@ It will launched test website on port 8080
 http://localhost:8080
 
 -------
+
 To execute both application together
 * Execute below command
 java -jar TestSite-0.0.1-SNAPSHOT.jar
