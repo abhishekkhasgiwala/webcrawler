@@ -1,7 +1,11 @@
 package com.ak.crawler;
 
+import static com.ak.crawler.WebCrawlerConstants.ABS_SRC;
+import static com.ak.crawler.WebCrawlerConstants.ATTR_HREF;
+import static com.ak.crawler.WebCrawlerConstants.HTML_A_HREF;
+import static com.ak.crawler.WebCrawlerConstants.HTML_IMG;
+
 import java.util.HashSet;
-import java.util.Iterator;
 
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -49,33 +53,25 @@ public class WebCrawler {
 			links.add(url);
 			Document doc = WebCrawlerUtil.getDocument(url);
 			if (doc != null) {
-				Elements hrefs = doc.select("a[href]");
-				Elements imgs = doc.select("img");
+				Elements hrefs = doc.select(HTML_A_HREF);
+				Elements imgs = doc.select(HTML_IMG);
 				depth++;
 
 				for (Element img : imgs) {
-					urls.getImage().add(img.attr("abs:src"));
-					links.add(img.attr("abs:src"));
+					urls.getImage().add(img.attr(ABS_SRC));
+					links.add(img.attr(ABS_SRC));
 				}
 				for (Element href : hrefs) {
-					if (WebCrawlerUtil.isExternalLinks(href.absUrl("href"), config.getIgnorexternalsites())) {
+					if (WebCrawlerUtil.isExternalLinks(href.absUrl(ATTR_HREF), config.getIgnorexternalsites())) {
 						continue;
 					} else {
-						urls.getLoc().add(href.absUrl("href"));
-						getMoreLinks(href.absUrl("href"), depth, urls);
+						urls.getLoc().add(href.absUrl(ATTR_HREF));
+						getMoreLinks(href.absUrl(ATTR_HREF), depth, urls);
 					}
 				}
 			}
 		}
 		return urls;
-	}
-
-	// to be removed
-	private void display(HashSet links) {
-		Iterator i = links.iterator();
-		while (i.hasNext()) {
-			System.out.println((String) i.next());
-		}
 	}
 
 }
